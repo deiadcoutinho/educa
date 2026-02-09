@@ -1,10 +1,9 @@
-export enum Subject {
-  MATH = 'Matemática',
-  PORTUGUESE = 'Português',
-  ENGLISH = 'Inglês',
-  SCIENCE = 'Ciências',
-  GEOGRAPHY = 'Geografia',
-  HISTORY = 'História'
+
+export interface SubjectTheme {
+  name: string;
+  color: string;
+  icon: string;
+  gradient: string;
 }
 
 export interface Exercise {
@@ -12,7 +11,7 @@ export interface Exercise {
   title: string;
   description: string;
   url: string;
-  subject: Subject;
+  subject: string;
   difficulty: 'Fácil' | 'Médio' | 'Difícil';
   points: number;
 }
@@ -23,10 +22,4 @@ export interface UserStats {
   dailyGoal: number;
   completedTodayIds: string[];
   lastActiveDate: string;
-}
-
-export interface SubjectTheme {
-  color: string;
-  icon: string;
-  gradient: string;
 }
