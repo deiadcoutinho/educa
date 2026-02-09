@@ -32,7 +32,7 @@ const App: React.FC = () => {
   }, [user]);
 
   const handleEnter = () => {
-    if (inputValue.trim().length < 3) return;
+    if (inputValue.trim().length < 2) return;
     setUser({
       name: inputValue.trim(),
       totalPoints: 0,
