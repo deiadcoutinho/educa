@@ -130,16 +130,20 @@ const App: React.FC = () => {
 
   if (!user) return (
     <div className="min-h-screen bg-indigo-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl">
-        <h1 className="text-4xl font-black text-slate-800 mb-6 tracking-tight">EduQuest 🚀</h1>
-        <input 
-          type="text" placeholder="Qual o seu nome?" value={loginName}
-          onChange={e => setLoginName(e.target.value)}
-          className="w-full px-6 py-4 bg-slate-50 border-2 rounded-2xl mb-4 text-center font-bold text-lg focus:border-indigo-500 outline-none transition-all"
-        />
-        <button onClick={handleLogin} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg transform active:scale-95 transition-all">
-          Começar a Estudar
-        </button>
+      <div className="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl animate-in fade-in zoom-in duration-300">
+        <div className="text-6xl mb-4 animate-float">🚀</div>
+        <h1 className="text-4xl font-black text-slate-800 mb-2 tracking-tight">EduQuest</h1>
+        <p className="text-slate-500 mb-8 font-medium">Seu portal de estudos interativo</p>
+        <div className="space-y-4">
+          <input 
+            type="text" placeholder="Qual o seu nome?" value={loginName}
+            onChange={e => setLoginName(e.target.value)}
+            className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-lg focus:border-indigo-500 focus:bg-white outline-none transition-all"
+          />
+          <button onClick={handleLogin} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg transform active:scale-95 transition-all">
+            Entrar no Portal
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -151,24 +155,24 @@ const App: React.FC = () => {
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
             {user.name[0].toUpperCase()}
           </div>
-          <div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Estudante</p>
+          <div className="hidden sm:block">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Bem-vindo</p>
             <span className="font-bold text-slate-800">{user.name}</span>
           </div>
         </div>
         
-        <div className="flex items-center gap-4">
-          <div className="bg-amber-50 text-amber-600 px-4 py-1.5 rounded-full font-black text-xs flex items-center gap-2 border border-amber-100">
+        <div className="flex items-center gap-3">
+          <div className="bg-amber-50 text-amber-600 px-4 py-1.5 rounded-full font-black text-xs border border-amber-100 flex items-center gap-2">
             ⭐ {user.totalPoints} XP
           </div>
           
           {isAdmin ? (
-            <button onClick={logoutAdmin} className="px-4 py-2 bg-rose-500 text-white rounded-xl text-xs font-black uppercase shadow-md">
+            <button onClick={logoutAdmin} className="px-4 py-2 bg-rose-500 text-white rounded-xl text-xs font-black uppercase shadow-md hover:bg-rose-600">
               Sair do Painel
             </button>
           ) : (
-            <button onClick={() => setShowAdminLogin(true)} className="px-4 py-2 bg-slate-800 text-white rounded-xl text-xs font-black uppercase shadow-md flex items-center gap-2">
-              <span>Painel Prof</span> 👨‍🏫
+            <button onClick={() => setShowAdminLogin(true)} className="px-4 py-2 bg-slate-800 text-white rounded-xl text-xs font-black uppercase shadow-md flex items-center gap-2 hover:bg-slate-900 transition-colors">
+              <span>Painel Professor</span> 👨‍🏫
             </button>
           )}
         </div>
@@ -176,16 +180,18 @@ const App: React.FC = () => {
 
       {showAdminLogin && !isAdmin && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl">
-            <h3 className="text-xl font-black mb-4 text-slate-800">Senha do Professor</h3>
+          <div className="bg-white rounded-[2.5rem] p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-black mb-2 text-slate-800">Acesso Restrito</h3>
+            <p className="text-sm text-slate-500 mb-6">Apenas professores podem adicionar ou remover links de atividades.</p>
             <input 
-              type="password" placeholder="admin123" 
+              type="password" placeholder="Digite a senha..." 
               value={adminPassInput} onChange={e => setAdminPassInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAdminLogin()}
               className="w-full px-5 py-3 border-2 rounded-xl mb-4 focus:border-indigo-500 outline-none font-bold"
               autoFocus
             />
             <div className="flex gap-2">
-              <button onClick={() => setShowAdminLogin(false)} className="flex-1 py-3 font-bold text-slate-500">Voltar</button>
+              <button onClick={() => setShowAdminLogin(false)} className="flex-1 py-3 font-bold text-slate-500 hover:bg-slate-50 rounded-xl">Voltar</button>
               <button onClick={handleAdminLogin} className="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg">Entrar</button>
             </div>
           </div>
@@ -194,62 +200,85 @@ const App: React.FC = () => {
 
       <main className="max-w-6xl mx-auto p-6">
         {isAdmin ? (
-          <div className="space-y-8 animate-in fade-in duration-500">
-            <h2 className="text-3xl font-black text-slate-800">Gestão de Conteúdo 🛠️</h2>
+          <div className="space-y-8 animate-in slide-in-from-top-4 duration-500">
+            <div className="flex justify-between items-center">
+              <h2 className="text-3xl font-black text-slate-800">Painel do Professor 👨‍🏫</h2>
+            </div>
+            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <section className="bg-white p-8 rounded-[2rem] shadow-sm border">
-                <h3 className="text-lg font-black mb-6">Criar Matéria</h3>
+              <section className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200">
+                <h3 className="text-lg font-black mb-6 flex items-center gap-2">📚 Adicionar Matéria</h3>
                 <div className="space-y-4">
                   <div className="flex gap-2">
-                    <input placeholder="Nome" value={newSubj.name} onChange={e => setNewSubj({...newSubj, name: e.target.value})} className="flex-1 border-2 p-3 rounded-xl outline-none" />
+                    <input placeholder="Nome da Matéria" value={newSubj.name} onChange={e => setNewSubj({...newSubj, name: e.target.value})} className="flex-1 border-2 p-3 rounded-xl focus:border-indigo-500 outline-none" />
                     <input placeholder="Emoji" value={newSubj.icon} onChange={e => setNewSubj({...newSubj, icon: e.target.value})} className="w-20 border-2 p-3 rounded-xl text-center" />
                   </div>
-                  <select value={newSubj.color} onChange={e => setNewSubj({...newSubj, color: e.target.value})} className="w-full border-2 p-3 rounded-xl bg-white outline-none">
-                    <option value="bg-blue-500">Azul</option>
-                    <option value="bg-rose-500">Rosa</option>
-                    <option value="bg-emerald-500">Verde</option>
+                  <select value={newSubj.color} onChange={e => setNewSubj({...newSubj, color: e.target.value})} className="w-full border-2 p-3 rounded-xl bg-white">
+                    <option value="bg-blue-500 text-blue-600">Cor: Azul</option>
+                    <option value="bg-rose-500 text-rose-600">Cor: Rosa</option>
+                    <option value="bg-emerald-500 text-emerald-600">Cor: Verde</option>
+                    <option value="bg-amber-500 text-amber-600">Cor: Amarelo</option>
+                    <option value="bg-indigo-500 text-indigo-600">Cor: Roxo</option>
                   </select>
-                  <button onClick={addSubject} className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold">Salvar Matéria</button>
+                  <button onClick={addSubject} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-md">Salvar Nova Matéria</button>
                 </div>
               </section>
 
-              <section className="bg-white p-8 rounded-[2rem] shadow-sm border">
-                <h3 className="text-lg font-black mb-6">Adicionar Link</h3>
+              <section className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200">
+                <h3 className="text-lg font-black mb-6 flex items-center gap-2">🔗 Novo Link de Atividade</h3>
                 <div className="space-y-3">
-                  <input placeholder="Título" value={newEx.title} onChange={e => setNewEx({...newEx, title: e.target.value})} className="w-full border-2 p-3 rounded-xl outline-none" />
-                  <input placeholder="URL" value={newEx.url} onChange={e => setNewEx({...newEx, url: e.target.value})} className="w-full border-2 p-3 rounded-xl outline-none" />
+                  <input placeholder="Título (Ex: Jogo da Memória)" value={newEx.title} onChange={e => setNewEx({...newEx, title: e.target.value})} className="w-full border-2 p-3 rounded-xl focus:border-indigo-500 outline-none" />
+                  <input placeholder="Link (URL)" value={newEx.url} onChange={e => setNewEx({...newEx, url: e.target.value})} className="w-full border-2 p-3 rounded-xl focus:border-indigo-500 outline-none" />
                   <select value={newEx.subject} onChange={e => setNewEx({...newEx, subject: e.target.value})} className="w-full border-2 p-3 rounded-xl bg-white outline-none">
-                    <option value="">Escolha a Matéria...</option>
+                    <option value="">Selecione a Matéria...</option>
                     {subjects.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
                   </select>
-                  <button onClick={addExercise} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold">Salvar Atividade</button>
+                  <button onClick={addExercise} className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black hover:bg-emerald-700 shadow-md">Cadastrar Link</button>
                 </div>
               </section>
             </div>
             
-            <div className="bg-white p-6 rounded-2xl border">
-              <h4 className="font-bold mb-4">Links Cadastrados</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {exercises.map(ex => (
-                  <div key={ex.id} className="p-3 bg-slate-50 rounded-xl flex justify-between items-center">
-                    <span className="text-sm font-bold text-slate-700">{ex.title} ({ex.subject})</span>
-                    <button onClick={() => removeExercise(ex.id)} className="text-rose-500 text-xs font-black">EXCLUIR</button>
-                  </div>
-                ))}
+            <div className="bg-white p-8 rounded-[2rem] border border-slate-200">
+              <h4 className="font-black text-slate-800 mb-6 uppercase text-xs tracking-widest">Gerenciar Conteúdo Existente</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {exercises.length === 0 ? (
+                  <p className="text-slate-400 italic">Nenhum exercício cadastrado ainda.</p>
+                ) : (
+                  exercises.map(ex => (
+                    <div key={ex.id} className="p-4 bg-slate-50 rounded-2xl flex justify-between items-center border border-slate-100 group hover:bg-white transition-all">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-indigo-500 uppercase">{ex.subject}</span>
+                        <span className="text-sm font-bold text-slate-700 truncate max-w-[150px]">{ex.title}</span>
+                      </div>
+                      <button onClick={() => removeExercise(ex.id)} className="text-rose-500 hover:bg-rose-50 p-2 rounded-lg transition-colors">
+                        🗑️
+                      </button>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
         ) : (
           <>
             {!selectedSubject ? (
-              <div className="animate-in fade-in duration-500">
-                <div className="bg-indigo-600 rounded-[2.5rem] p-8 text-white mb-10 shadow-xl relative overflow-hidden">
-                  <h3 className="text-2xl font-black mb-4">Seu Progresso de Hoje 🎯</h3>
-                  <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
-                    <div className="h-full bg-white transition-all duration-1000" style={{ width: `${progress}%` }} />
+              <div className="animate-in fade-in duration-700">
+                <div className="bg-indigo-600 rounded-[2.5rem] p-10 text-white mb-10 shadow-xl relative overflow-hidden">
+                  <div className="relative z-10">
+                    <h3 className="text-3xl font-black mb-2">Seu Desafio Diário 🎯</h3>
+                    <div className="flex justify-between items-end mb-4">
+                      <p className="text-lg opacity-90">{user.completedTodayIds.length} de {user.dailyGoal} atividades feitas</p>
+                      <span className="text-2xl font-black">{progress}%</span>
+                    </div>
+                    <div className="w-full h-4 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-white shadow-lg transition-all duration-1000" style={{ width: `${progress}%` }} />
+                    </div>
                   </div>
+                  <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 px-2">Matérias para Estudar</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                   {subjects.map(s => (
                     <SubjectCard 
                       key={s.name} 
@@ -262,28 +291,41 @@ const App: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="animate-in fade-in duration-500">
-                <div className="flex items-center gap-4 mb-8">
-                  <button onClick={() => setSelectedSubject(null)} className="w-12 h-12 bg-white border-2 rounded-2xl flex items-center justify-center font-bold">←</button>
-                  <h2 className="text-3xl font-black text-slate-800">{selectedSubject}</h2>
+              <div className="animate-in slide-in-from-bottom-6 duration-500">
+                <div className="flex items-center gap-6 mb-10">
+                  <button onClick={() => setSelectedSubject(null)} className="w-14 h-14 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center text-slate-600 font-bold text-2xl hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm active:scale-90">←</button>
+                  <h2 className="text-5xl font-black text-slate-800 tracking-tight">{selectedSubject}</h2>
                 </div>
                 
-                <div className="bg-white p-6 rounded-2xl border-l-8 border-indigo-500 shadow-sm mb-10 italic font-medium text-slate-700">
-                  {isTipLoading ? 'Consultando professor...' : `💡 ${studyTip}`}
+                <div className="bg-white p-8 rounded-[2.5rem] border-l-8 border-indigo-500 shadow-sm mb-12 flex items-start gap-6 transform hover:scale-[1.01] transition-transform">
+                  <div className="text-4xl animate-bounce">💡</div>
+                  <div>
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Dica do Professor:</h4>
+                    <p className="text-xl text-slate-700 italic font-bold leading-relaxed">
+                      {isTipLoading ? 'Consultando IA do Professor...' : studyTip}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {exercises.filter(e => e.subject === selectedSubject).map(ex => {
-                    const theme = subjects.find(s => s.name === selectedSubject)!;
-                    return (
-                      <ExerciseCard 
-                        key={ex.id} exercise={ex} theme={theme}
-                        isCompleted={user.completedTodayIds.includes(ex.id)} 
-                        onComplete={completeExercise} 
-                      />
-                    );
-                  })}
-                </div>
+                {exercises.filter(e => e.subject === selectedSubject).length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {exercises.filter(e => e.subject === selectedSubject).map(ex => {
+                      const theme = subjects.find(s => s.name === selectedSubject)!;
+                      return (
+                        <ExerciseCard 
+                          key={ex.id} exercise={ex} theme={theme}
+                          isCompleted={user.completedTodayIds.includes(ex.id)} 
+                          onComplete={completeExercise} 
+                        />
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-32 bg-white rounded-[4rem] border-4 border-dashed border-slate-100">
+                    <div className="text-8xl mb-6 opacity-40">✨</div>
+                    <p className="text-slate-400 font-black text-2xl">Nada por aqui ainda!<br/><span className="text-lg font-medium">Volte logo para novas atividades.</span></p>
+                  </div>
+                )}
               </div>
             )}
           </>
@@ -294,9 +336,7 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
-
       
+
 
 
