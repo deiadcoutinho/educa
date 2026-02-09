@@ -21,12 +21,18 @@ const App: React.FC = () => {
     title: '', description: '', url: '', subject: '', difficulty: 'Médio', points: 10
   });
 
+  // SENHA DE ACESSO AO PAINEL (Altere aqui se desejar)
+  const ADMIN_PASSWORD = 'admin123';
+
   useEffect(() => {
     const savedUser = localStorage.getItem('eduquest_user');
     const savedSubjects = localStorage.getItem('eduquest_subjects');
     const savedExercises = localStorage.getItem('eduquest_exercises');
+    const savedAdmin = sessionStorage.getItem('eduquest_is_admin');
 
     if (savedUser) setUser(JSON.parse(savedUser));
+    if (savedAdmin === 'true') setIsAdmin(true);
+    
     setSubjects(savedSubjects ? JSON.parse(savedSubjects) : INITIAL_SUBJECTS);
     setExercises(savedExercises ? JSON.parse(savedExercises) : INITIAL_EXERCISES);
   }, []);
@@ -48,9 +54,24 @@ const App: React.FC = () => {
     });
   };
 
+  const toggleAdmin = () => {
+    if (isAdmin) {
+      setIsAdmin(false);
+      sessionStorage.removeItem('eduquest_is_admin');
+    } else {
+      const pass = prompt("Digite a senha de acesso do Professor:");
+      if (pass === ADMIN_PASSWORD) {
+        setIsAdmin(true);
+        sessionStorage.setItem('eduquest_is_admin', 'true');
+      } else if (pass !== null) {
+        alert("Senha incorreta! Acesso negado.");
+      }
+    }
+  };
+
   const addSubject = () => {
     if (!newSubj.name) return alert("Dê um nome à matéria!");
-    const colorKey = newSubj.color.split('-')[1];
+    const colorKey = newSubj.color.split('-')[1] || 'blue';
     const theme: SubjectTheme = {
       ...newSubj,
       gradient: `from-${colorKey}-500 to-${colorKey}-600`
@@ -69,7 +90,7 @@ const App: React.FC = () => {
 
   const addExercise = () => {
     if (!newEx.title || !newEx.url || !newEx.subject) return alert("Preencha os campos obrigatórios!");
-    const exercise: Exercise = { ...newEx, id: Date.now().toString() };
+    const exercise: Exercise = { ...newEx, id: Date.now().toString() } as Exercise;
     setExercises([...exercises, exercise]);
     setNewEx({ ...newEx, title: '', description: '', url: '' });
   };
@@ -138,7 +159,7 @@ const App: React.FC = () => {
             ⭐ {user.totalPoints} XP
           </div>
           <button 
-            onClick={() => setIsAdmin(!isAdmin)}
+            onClick={toggleAdmin}
             className={`px-4 py-2 rounded-xl text-xs font-black uppercase transition-all shadow-sm ${
               isAdmin ? 'bg-rose-500 text-white' : 'bg-slate-800 text-white'
             }`}
@@ -257,4 +278,9 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
+ 
+   
+
 
